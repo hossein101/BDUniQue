@@ -6,93 +6,94 @@ local function pre_process(msg)
        end
     return msg
  end
- 
+	
 local function run(msg, matches)
 local hash = "gp_lang:"..msg.to.id
 local lang = redis:get(hash)
- if matches[1] == 'mute' and matches[2] == 'all' and is_mod(msg) then
-       local hash = 'muteall:'..msg.to.id
-       if not matches[3] then
-              redis:set(hash, true)
-             return "mute all has been enabled"
- else
-local hour = string.gsub(matches[3], 'h', '')
+if matches[1] == 'mute' and matches[2] == 'all' and is_mod(msg) then
+local hash = 'muteall:'..msg.to.id
+redis:set(hash, true)
+if not lang then
+return "mute all has been enabled"
+elseif lang then
+return "بصدا کردن گروه فعال شد"
+end
+end
+ if matches[1] == 'mute' and is_mod(msg) then
+local hour = string.gsub(matches[2], 'h', '')
 local num1 = tonumber(hour) * 3600
-local minutes = string.gsub(matches[4], 'm', '')
+local minutes = string.gsub(matches[3], 'm', '')
 local num2 = tonumber(minutes) * 60
-local second = string.gsub(matches[5], 's', '')
+local second = string.gsub(matches[4], 's', '')
 local num3 = tonumber(second) 
 local num4 = tonumber(num1 + num2 + num3)
 redis:setex(hash, num4, true)
 if not lang then
- return "Mute all has been enabled for \n⏺ hours : "..matches[3].."\n⏺ minutes : "..matches[4].."\n⏺ seconds : "..matches[5].."\n@BeyondTeam"
+ return "Mute all has been enabled for \n⏺ hours : "..matches[2].."\n⏺ minutes : "..matches[3].."\n⏺ seconds : "..matches[4].."\n@Porniv"
  elseif lang then
- return "بی صدا کردن فعال شد در \n⏺ ساعت : "..matches[3].."\n⏺ دقیقه : "..matches[4].."\n⏺ ثانیه : "..matches[5].."\n@BeyondTeam"
+ return "بی صدا کردن فعال شد در \n⏺ ساعت : "..matches[2].."\n⏺ دقیقه : "..matches[3].."\n⏺ ثانیه : "..matches[4].."\n@Porniv"
  end
  end
- end
- if matches[1] == 'mute' and matches[2] == 'hours' and is_mod(msg) then
+ if matches[1] == 'mutehours' and is_mod(msg) then
        local hash = 'muteall:'..msg.to.id
-       if not matches[3] then
-              redis:set(hash, true)
-             return "mute all has been enabled"
- else
-local hour = string.gsub(matches[3], 'h', '')
+local hour = string.gsub(matches[2], 'h', '')
 local num1 = tonumber(hour) * 3600
 local num4 = tonumber(num1)
 redis:setex(hash, num4, true)
 if not lang then
- return "Mute all has been enabled for \n⏺ hours : "..matches[3].."\n@BeyondTeam"
+ return "Mute all has been enabled for \n⏺ hours : "..matches[2].."\n@Porniv"
  elseif lang then
- return "بی صدا کردن فعال شد در \n⏺ ساعت : "..matches[3].."\n@BeyondTeam"
+ return "بی صدا کردن فعال شد در \n⏺ ساعت : "..matches[2].."\n@Porniv"
  end
  end
- end
-  if matches[1] == 'mute' and matches[2] == 'minutes' and is_mod(msg) then
+  if matches[1] == 'muteminutes' and is_mod(msg) then
        local hash = 'muteall:'..msg.to.id
-       if not matches[3] then
-              redis:set(hash, true)
-             return "mute all has been enabled"
- else
-local minutes = string.gsub(matches[3], 'm', '')
+local minutes = string.gsub(matches[2], 'm', '')
 local num2 = tonumber(minutes) * 60
 local num4 = tonumber(num2)
 redis:setex(hash, num4, true)
 if not lang then
- return "Mute all has been enabled for \n⏺ minutes : "..matches[3].."\n@BeyondTeam"
+ return "Mute all has been enabled for \n⏺ minutes : "..matches[2].."\n@Porniv"
  elseif lang then
- return "بی صدا کردن فعال شد در \n⏺ دقیقه : "..matches[3].."\n@BeyondTeam"
+ return "بی صدا کردن فعال شد در \n⏺ دقیقه : "..matches[2].."\n@Porniv"
  end
  end
- end
-  if matches[1] == 'mute' and matches[2] == 'seconds' and is_mod(msg) then
+  if matches[1] == 'muteseconds' and is_mod(msg) then
        local hash = 'muteall:'..msg.to.id
-       if not matches[3] then
-              redis:set(hash, true)
-             return "mute all has been enabled"
- else
-local second = string.gsub(matches[3], 's', '')
+local second = string.gsub(matches[2], 's', '')
 local num3 = tonumber(second) 
 local num4 = tonumber(num3)
 redis:setex(hash, num3, true)
 if not lang then
- return "Mute all has been enabled for \n⏺ seconds : "..matches[3].."\n@BeyondTeam"
+ return "Mute all has been enabled for \n⏺ seconds : "..matches[2].."\n@Porniv"
  elseif lang then
- return "بی صدا کردن فعال شد در \n⏺ ثانیه : "..matches[3].."\n@BeyondTeam"
+ return "بی صدا کردن فعال شد در \n⏺ ثانیه : "..matches[2].."\n@Porniv"
  end
  end
- end
+ 
+ if matches[1] == 'unmute' and matches[2] == 'all' and is_mod(msg) then
+         local hash = 'muteall:'..msg.to.id
+        redis:del(hash)
+		if not lang then
+          return "mute all has been disabled"
+		  elseif lang then
+		  return "گروه ازاد شد و افراد می توانند دوباره پست بگذارند"
+  end
+end
+
 if matches[1] == 'helpmute' then
 if not lang then
 text = [[
 *Beyond Mute Commands:*
-*!mute all* `(hour) (minute) (seconds)`
+*!mute all*
+_Mute groups_
+*!mute* `(hour) (minute) (seconds)`
 _Mute group at this time_ 
-*!mute hours* `(number)`
+*!mutehours* `(number)`
 _Mute group at this time_ 
-*!mute minute* `(number)`
+*!muteminutes* `(number)`
 _Mute group at this time_ 
-*!mute seconds* `(number)`
+*!muteseconds* `(number)`
 _Mute group at this time_ 
 *!unmute all*
 _Unmute group at this time_ 
@@ -101,13 +102,15 @@ _You can use_ *[!/#]* _at the beginning of commands._
 elseif lang then
 text = [[
 *راهنمای بیصدا های ربات بیوند:*
-*!mute all* `(hour) (minute) (seconds)`
+*!mute all*
+_بیصدا کردن گروه_
+*!mute* `(hour) (minute) (seconds)`
 _بیصدا کردن گروه با ساعت و دقیقه و ثانیه_ 
-*!mute hours* `(number)`
+*!mutehours* `(number)`
 _بیصدا کردن گروه در ساعت_ 
-*!mute minute* `(number)`
+*!muteminutes* `(number)`
 _بیصدا کردن گروه در دقیقه_ 
-*!mute seconds* `(number)`
+*!muteseconds* `(number)`
 _بیصدا کردن گروه در ثانیه_ 
 *!unmute all*
 _آزاد سازی بیصدایی گروه در آن زمان_ 
@@ -116,27 +119,19 @@ _آزاد سازی بیصدایی گروه در آن زمان_
 end
 return text
 end
-if matches[1] == 'unmute' and matches[2] == 'all' and is_mod(msg) then
-               local hash = 'muteall:'..msg.to.id
-        redis:del(hash)
-		if not lang then
-          return "mute all has been disabled"
-		  elseif lang then
-		  return "گروه ازاد شد و افراد می توانند دوباره پست بگذارند"
-  end
-end
 end
 return {
    patterns = {
 _config.cmd .. '([Uu]nmute) (all)$',
+_config.cmd .. '([Mm]ute) (all)$',
 _config.cmd .. '([Hh]elpmute)$',
-_config.cmd .. '([Mm]ute) (all) (.*) (.*) (.*)$',
-_config.cmd .. '([Mm]ute) (hours) (.*)$',
-_config.cmd .. '([Mm]ute) (minutes) (.*)$',
-_config.cmd .. '([Mm]ute) (seconds) (.*)$',
+_config.cmd .. '([Mm]ute) (.*) (.*) (.*)$',
+_config.cmd .. '([Mm]utehours) (.*)$',
+_config.cmd .. '([Mm]uteminutes) (.*)$',
+_config.cmd .. '([Mm]uteseconds) (.*)$',
  },
 run = run,
 pre_process = pre_process
 }
 end
---by @BeyondTeam
+--by @Porniv
